@@ -1,2 +1,3 @@
-# hassio-cfg
+# Home Assistant Configuration 
+
 home assistant configuration
