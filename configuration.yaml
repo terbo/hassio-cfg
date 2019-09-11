@@ -1,0 +1,120 @@
+### The Omnigrotto's Home Assistant Configuration
+### version .55 
+### lastmod: 9/10/2019 10:22
+
+## logger: switch default between debug and info to see more info or troubleshoot
+## http: uncomment ssl lines for https and change port in secrets.yaml
+## frontend: use the latest script versions, useful for IOS
+## lovelace: use yaml configuration instead of UI editor, allows custom cards/etc
+## person: All the (sheep) are defined here
+## recorder: still using sqlite DB, migrating to off-host influxdb soon
+
+## BEGIN
+
+homeassistant:
+  name: !secret hass_name
+  latitude: !secret hass_latitude
+  longitude: !secret hass_longitude
+  elevation: 0
+  unit_system: imperial
+  time_zone: !secret hass_timezone
+  customize: !include customize.yaml
+
+logger:
+  default: debug
+
+http:
+  base_url: !secret base_url
+  server_port: !secret http_port
+
+frontend:
+  javascript_version: latest
+  themes: !include themes.yaml
+  #themes: !include_dir_list themes
+  extra_html_url:
+   - /local/custom_ui/state-card-floorplan.html
+
+lovelace:
+  mode: yaml
+
+person: !include bots.yaml
+
+recorder:
+  purge_keep_days: 5
+  purge_interval: 2
+
+automation: !include automations.yaml
+
+media_player:
+  - platform: mpd
+    name: hassio
+    host: !secret host_ha
+
+mqtt: !include mqtt.yaml
+
+hacs:
+  token: !secret hacs_token
+
+conversation:
+config:
+discovery:
+history:
+logbook:
+map:
+shopping_list:
+sun:
+system_health:
+weather:
+  - platform: darksky
+    api_key: !secret darksky_token
+
+browser_mod: !include browser_mod.yaml
+device_tracker: !include device_tracker.yaml
+group: !include groups.yaml
+intent_script: !include snips.yaml
+light: !include lights.yaml
+owntracks: !include owntracks.yaml
+script: !include scripts.yaml
+sensor: !include sensors.yaml
+snips:
+switch: !include switches.yaml
+tts: !include tts.yaml
+
+## END
+
+## currently disabled
+
+#http:
+#  ssl_certificate: /config/ssl/cert.pem
+#  ssl_key: /config/ssl/priv.pem
+#  ssl_profile: intermediate
+
+# pros: doesn't need an api key...
+# weather:
+#  - platform: met
+
+#influxdb: !include influxdb.yaml
+
+#recorder:
+#  exclude:
+#    domains:
+#    - 'glances'
+#    - 'media_player'
+
+#panel_custom:
+#  - name: floorplan
+#    sidebar_title: Floorplan
+#    sidebar_icon: mdi:map
+#    url_path: floorplan
+#    config: !include floorplan.yaml
+
+#panel_iframe:
+#  grafana:
+#    title: Grafana
+#    icon: mdi:chart-timeline
+#    url: http://home:3000
+
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+#updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
